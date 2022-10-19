@@ -1,0 +1,28 @@
+# docker-compose up -d
+# docker exec -it mongodb bash
+version: "3.8"
+services:
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+
+  my-container:
+    # container_name: my-container
+    # image: TODO FIGURE OUT
+    depends_on:
+      - mongodb
+    restart: always
+    build: .
+    ports:
+      - "8000:8000"
+    links:
+      - mongodb
